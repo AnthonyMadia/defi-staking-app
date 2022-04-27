@@ -1,5 +1,5 @@
-// stake: Lock tokens into our smart contract
-// withdraw: unlock tokens and pull out of contract
+// stake: Lock tokens into our smart contract ✅
+// withdraw: unlock tokens and pull out of contract ✅
 // claimReward: users get their reward tokens
 // What's some good reward math
 
@@ -35,6 +35,15 @@ contract Staking {
         bool success = s_stakingToken.transferFrom(msg.sender, address(this), amount);
         // require(success, "Failed");
         // error handling
+        if(!success) {
+            revert Staking__TransferFailed();
+        }
+    }
+
+    function withdraw(uint256 amount) external {
+        s_balances[msg.sender] = s_balances[msg.sender] - amount;
+        s_totalSupply = s_totalSupply - amount;
+        bool success = s_stakingToken.transfer(msg.sender, amount);
         if(!success) {
             revert Staking__TransferFailed();
         }
